@@ -1,0 +1,13 @@
+{
+  "name": "slow",
+  "version": "0.0.1",
+  "description": "A small and simple alternative to express.",
+  "main": "index.js",
+  "repository": "https://github.com/dkomeza/slow",
+  "author": "Dawid Komęza <dawid.komeza@gmail.com>",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"npx tsc --watch\" \"nodemon build/slow.js \""
+  }
+}
