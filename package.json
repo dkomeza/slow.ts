@@ -8,6 +8,10 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "dev": "concurrently \"npx tsc --watch\" \"nodemon build/slow.js \""
+    "dev": "concurrently \"npx tsc --watch\" \"nodemon build/slow.js \"",
+    "test": "node test/test.js"
+  },
+  "devDependencies": {
+    "@types/node": "^18.14.6"
   }
 }
