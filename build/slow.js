@@ -9,9 +9,10 @@ class slow {
         this.router.handle(req, res);
     }
     listen(port, callback) {
+        const hostPort = port || 5000;
         const server = http.createServer(this.handle.bind(this));
         server.on;
-        return server.listen.apply(server, [port, callback]);
+        return server.listen.apply(server, [hostPort, callback]);
     }
 }
 export default slow;

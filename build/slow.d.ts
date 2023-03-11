@@ -6,7 +6,7 @@ declare class slow implements slow {
     constructor();
     route(method: typeof methods[number]): void;
     private handle;
-    listen(port: number, callback: () => void): http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>;
+    listen(port?: number, callback?: () => void): http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>;
 }
 export default slow;
 export declare const app: slow;
