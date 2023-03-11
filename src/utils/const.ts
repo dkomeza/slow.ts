@@ -1,7 +1,3 @@
-import { METHODS } from "http";
-
-export const methods = METHODS.map((method: string) => {
-  return method.toLowerCase();
-});
+export const methods = ["get", "post"] as const;
 
 // Path: src/utils/const.ts

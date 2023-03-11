@@ -1,3 +1,4 @@
-import slow from "./build/slow.js";
+import slow, { app } from "./build/slow";
 
 export default slow;
+export { app };

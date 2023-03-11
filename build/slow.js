@@ -1,20 +1,10 @@
 import http from "http";
 import Router from "./router/router.js";
-import * as CONST from "./utils/const.js";
 class slow {
     constructor() {
         this.router = new Router();
-        CONST.methods.forEach((method) => {
-            this[method] = function (path, args) {
-                this.registerPath(path, method, args);
-            };
-        });
     }
-    registerPath(path, method, args) {
-        const route = this.router.route(path);
-        // route[method].apply(route, args);
-        return this;
-    }
+    route(method) { }
     handle(req, res) {
         this.router.handle(req, res);
     }
@@ -25,3 +15,4 @@ class slow {
     }
 }
 export default slow;
+export const app = new slow();

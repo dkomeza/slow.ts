@@ -1,4 +1,5 @@
 import http, { IncomingMessage, ServerResponse } from "http";
+import { methods } from "./utils/const.js";
 
 import Router from "./router/router.js";
 
@@ -8,9 +9,7 @@ class slow implements slow {
     this.router = new Router();
   }
 
-  route() {
-
-  }
+  route(method: typeof methods[number]) {}
 
   private handle(req: IncomingMessage, res: ServerResponse) {
     this.router.handle(req, res);
@@ -24,3 +23,4 @@ class slow implements slow {
 }
 
 export default slow;
+export const app = new slow();
