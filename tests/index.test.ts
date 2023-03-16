@@ -2,9 +2,8 @@ import { app } from "../index.js";
 
 // const app = new slow();
 
-app.route("get", "/", (req, res) => {
-  // console.log(req);
-  res.end("Hello World");
+app.route("get", "/super", (req, res) => {
+  res.send("haha");
 });
 
 app.listen(5000, () => {
