@@ -4,23 +4,23 @@ import { methods } from "./utils/const.js";
 import Router from "./router/Router.js";
 import SlowResponse from "./router/Response.js";
 
-class slow implements slow {
-  private router: Router;
+class slow {
+  private _router: Router;
   constructor() {
-    this.router = new Router();
+    this._router = new Router();
   }
 
-  route(
+  router = (
     method: typeof methods[number],
     path: string,
     callback: (req: IncomingMessage, res: SlowResponse) => void
-  ) {
-    const route = this.router.route(path);
-    route.get(callback);
-  }
+  ) => {
+    const route = this._router.route(path);
+    route.methods[method] = callback;
+  };
 
   private handle(req: IncomingMessage, res: SlowResponse) {
-    this.router.handle(req, res);
+    this._router.handle(req, res);
   }
 
   listen(port?: number, callback?: () => void) {

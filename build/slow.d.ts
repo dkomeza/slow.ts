@@ -2,10 +2,10 @@
 import http, { IncomingMessage } from "http";
 import { methods } from "./utils/const.js";
 import SlowResponse from "./router/Response.js";
-declare class slow implements slow {
-    private router;
+declare class slow {
+    private _router;
     constructor();
-    route(method: typeof methods[number], path: string, callback: (req: IncomingMessage, res: SlowResponse) => void): void;
+    router: (method: (typeof methods)[number], path: string, callback: (req: IncomingMessage, res: SlowResponse) => void) => void;
     private handle;
     listen(port?: number, callback?: () => void): http.Server<typeof http.IncomingMessage, typeof SlowResponse>;
 }

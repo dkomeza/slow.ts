@@ -3,14 +3,14 @@ import Router from "./router/Router.js";
 import SlowResponse from "./router/Response.js";
 class slow {
     constructor() {
-        this.router = new Router();
-    }
-    route(method, path, callback) {
-        const route = this.router.route(path);
-        route.get(callback);
+        this.router = (method, path, callback) => {
+            const route = this._router.route(path);
+            route.methods[method] = callback;
+        };
+        this._router = new Router();
     }
     handle(req, res) {
-        this.router.handle(req, res);
+        this._router.handle(req, res);
     }
     listen(port, callback) {
         const hostPort = port || 5000;

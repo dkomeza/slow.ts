@@ -14,25 +14,6 @@ class Route implements Route {
     this.path = path;
     this.methods = {};
   }
-
-  handle(req: IncomingMessage, res: SlowResponse) {
-    const callback = this.methods["get"];
-    if (callback) {
-      callback(req, res);
-    }
-  }
-
-  get(callback: callback) {
-    this.methods["get"] = callback;
-  }
-
-  post() {}
-
-  put() {}
-
-  delete() {}
-
-  patch() {}
 }
 
 export default Route;
