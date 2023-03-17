@@ -1,8 +1,15 @@
-import { app } from "../index.js";
+import slow from "../index.js";
 
-// const app = new slow();
+const app = new slow();
 
-app.route("get", "/super", (req, res) => {
+const router = app.router;
+console.log(router);
+
+router("get", "/super", (req, res) => {
+  res.send("super");
+});
+
+app.router("get", "/", (req, res) => {
   res.send("haha");
 });
 
