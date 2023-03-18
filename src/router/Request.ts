@@ -38,20 +38,25 @@ class SlowRequest extends http.IncomingMessage {
 
   parseGetRequest() {
     const url = this.url;
-    // const params = url?.split("?").pop()?.split("&");
-    const params = new URLSearchParams(url);
-    params?.forEach((param) => {
-      const key = param.split("=").shift();
-      if (key) {
-        this.body[key] = param.split("=").pop();
-      }
+    const params = new URLSearchParams(url?.split("?").pop());
+    params.forEach((value, key) => {
+      this.body[key] = value;
     });
   }
 
-  parsePostRequest() {}
-
-  parseBody() {
+  parsePostRequest() {
     this.body = {};
+    const contentType = this.headers["content-type"];
+    if (contentType) {
+      if (contentType.includes("application/json")) {
+        this.body = JSON.parse(this.data);
+      } else if (contentType.includes("application/x-www-form-urlencoded")) {
+        const params = new URLSearchParams(this.data);
+        params.forEach((value, key) => {
+          this.body[key] = value;
+        });
+      }
+    }
   }
 }
 
