@@ -1,8 +1,8 @@
-import { IncomingMessage } from "http";
 import SlowResponse from "./Response";
+import SlowRequest from "./Request";
 
 interface callback {
-  (req: IncomingMessage, res: SlowResponse): void;
+  (req: SlowRequest, res: SlowResponse): void;
 }
 
 class Route implements Route {

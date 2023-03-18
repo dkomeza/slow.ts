@@ -9,6 +9,7 @@
   "type": "module",
   "scripts": {
     "dev": "concurrently \"npx tsc --watch\" \"nodemon build/slow.js \"",
+    "build": "tsc",
     "test": "jest"
   },
   "devDependencies": {

@@ -1,6 +1,6 @@
-import { IncomingMessage, ServerResponse } from "http";
 import Route from "./Route.js";
 import SlowResponse from "./Response.js";
+import SlowRequest from "./Request.js";
 
 class Router {
   private routes: { [key: string]: Route } = {};
@@ -14,7 +14,7 @@ class Router {
 
   apply() {}
 
-  handle(req: IncomingMessage, res: SlowResponse) {
+  handle(req: SlowRequest, res: SlowResponse) {
     const path = this.parseUrl(req);
     const method = this.getMethod(req);
     const route = this.routes[path];
@@ -32,13 +32,13 @@ class Router {
     }
   }
 
-  parseUrl(req: IncomingMessage) {
+  parseUrl(req: SlowRequest) {
     const url = decodeURIComponent(req.url || "");
     const path = url.split("?")[0];
     return path;
   }
 
-  getMethod(req: IncomingMessage): string {
+  getMethod(req: SlowRequest): string {
     return req.method?.toLowerCase() || "get";
   }
 }

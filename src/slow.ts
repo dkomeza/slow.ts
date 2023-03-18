@@ -1,8 +1,9 @@
-import http, { IncomingMessage, ServerResponse, ServerOptions } from "http";
+import http from "http";
 import { methods } from "./utils/const.js";
 
 import Router from "./router/Router.js";
 import SlowResponse from "./router/Response.js";
+import SlowRequest from "./router/Request.js";
 
 class slow {
   private _router: Router;
@@ -13,13 +14,14 @@ class slow {
   router = (
     method: typeof methods[number],
     path: string,
-    callback: (req: IncomingMessage, res: SlowResponse) => void
+    callback: (req: SlowRequest, res: SlowResponse) => void
   ) => {
     const route = this._router.route(path);
     route.methods[method] = callback;
   };
 
-  private handle(req: IncomingMessage, res: SlowResponse) {
+  private async handle(req: SlowRequest, res: SlowResponse) {
+    await req.init();
     this._router.handle(req, res);
   }
 
@@ -27,7 +29,7 @@ class slow {
     const hostPort = port || 5000;
     const server = http.createServer(
       {
-        IncomingMessage: IncomingMessage,
+        IncomingMessage: SlowRequest,
         ServerResponse: SlowResponse,
       },
       this.handle.bind(this)

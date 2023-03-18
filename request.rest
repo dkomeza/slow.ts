@@ -1,1 +1,7 @@
-GET https://dev.dawidkomeza.pl/api/
+POST https://dev.dawidkomeza.pl/api/ 
+Content-Type:application/json
+Accept:application/json
+
+{
+    "supcio": "asdfkljslkfj"
+}

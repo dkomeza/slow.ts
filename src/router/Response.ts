@@ -1,9 +1,9 @@
 import http from "http";
+import SlowRequest from "./Request.js";
 
-class SlowResponse<Request extends http.IncomingMessage = http.IncomingMessage>
-  extends http.ServerResponse<Request>
-  implements SlowResponse
-{
+class SlowResponse<
+  Request extends http.IncomingMessage = SlowRequest
+> extends http.ServerResponse<Request> {
   constructor(req: Request) {
     super(req);
   }
