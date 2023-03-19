@@ -3,3 +3,6 @@ tests/
 src/
 request.rest
 babel.config.js
+tsconfig.json
+yarn.lock
+package-lock.json

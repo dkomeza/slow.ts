@@ -1,9 +1,9 @@
 {
   "name": "slow.ts",
-  "version": "0.0.2",
+  "version": "0.0.5",
   "description": "A small and simple alternative to express.",
-  "main": "index.js",
-  "types": "index.d.ts",
+  "main": "./index.js",
+  "types": "./index.d.ts",
   "repository": "https://github.com/dkomeza/slow",
   "author": "Dawid Komęza <dawid.komeza@gmail.com>",
   "license": "MIT",
@@ -12,6 +12,9 @@
     "dev": "concurrently \"npx tsc --watch\" \"nodemon build/slow.js \"",
     "build": "tsc",
     "test": "jest"
+  },
+  "dependencies": {
+    "@types/node": "^18.14.6"
   },
   "devDependencies": {
     "@babel/core": "^7.21.0",
