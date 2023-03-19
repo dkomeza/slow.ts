@@ -13,6 +13,7 @@ class SlowRequest extends http.IncomingMessage {
         super(socket);
         this.body = {};
         this.data = "";
+        this.params = {};
     }
     init() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -41,10 +42,12 @@ class SlowRequest extends http.IncomingMessage {
     }
     parseGetRequest() {
         const url = this.url;
-        const params = new URLSearchParams(url === null || url === void 0 ? void 0 : url.split("?").pop());
-        params.forEach((value, key) => {
-            this.body[key] = value;
-        });
+        if (url === null || url === void 0 ? void 0 : url.split("?").pop()) {
+            const params = new URLSearchParams();
+            params.forEach((value, key) => {
+                this.body[key] = value;
+            });
+        }
     }
     parsePostRequest() {
         this.body = {};

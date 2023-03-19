@@ -8,7 +8,9 @@ declare class Route implements Route {
     methods: {
         [key: string]: callback;
     };
+    placeholder: string | undefined;
     constructor(path: string);
+    parsePlaceholderPath(path: string): string | undefined;
 }
 export default Route;
 //# sourceMappingURL=Route.d.ts.map

@@ -13,16 +13,12 @@ import SlowResponse from "./router/Response.js";
 import SlowRequest from "./router/Request.js";
 class slow {
     constructor() {
-        this.router = (method, path, callback) => {
-            const route = this._router.route(path);
-            route.methods[method] = callback;
-        };
-        this._router = new Router();
+        this.router = new Router();
     }
     handle(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             yield req.init();
-            this._router.handle(req, res);
+            this.router.handle(req, res);
         });
     }
     listen(port, callback) {

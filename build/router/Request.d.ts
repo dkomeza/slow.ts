@@ -7,6 +7,9 @@ declare class SlowRequest extends http.IncomingMessage {
         [key: string]: any;
     };
     data: string;
+    params: {
+        [key: string]: any;
+    };
     constructor(socket: Socket);
     init(): Promise<void>;
     parseRequest(): void;

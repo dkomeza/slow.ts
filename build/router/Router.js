@@ -2,31 +2,64 @@ import Route from "./Route.js";
 class Router {
     constructor() {
         this.routes = {};
+        this._static = {};
+        this.route = (method, path, callback) => {
+            const parsedPath = this.parsePath(path);
+            const route = new Route(path);
+            route.methods[method] = callback;
+            this.routes[parsedPath] = route;
+        };
     }
-    route(path) {
-        const route = new Route(path);
-        this.routes[path] = route;
-        return route;
-    }
-    apply() { }
     handle(req, res) {
         const path = this.parseUrl(req);
         const method = this.getMethod(req);
         const route = this.routes[path];
+        // match exact path
         if (route) {
             const callback = route.methods[method];
             if (callback) {
                 callback(req, res);
-            }
-            else {
-                res.statusCode = 404;
-                res.end("Not Found");
+                return;
             }
         }
-        else {
-            res.statusCode = 404;
-            res.end("Not Found");
+        // match placeholder path
+        const placeholderPath = this.getPlaceholderPath(path);
+        const placeholderRoute = this.routes[placeholderPath];
+        if (placeholderRoute) {
+            if (placeholderRoute.placeholder) {
+                req.params[placeholderRoute.placeholder] = path.split("/").pop();
+            }
+            const callback = placeholderRoute.methods[method];
+            if (callback) {
+                callback(req, res);
+                return;
+            }
         }
+        // match wildcard path
+        let tempPath = path.split("/");
+        while (tempPath.length > 1) {
+            const wildcardPath = this.getWildcardPath(tempPath.join("/"));
+            console.log(wildcardPath);
+            const wildcardRoute = this.routes[wildcardPath];
+            if (wildcardRoute) {
+                const callback = wildcardRoute.methods[method];
+                if (callback) {
+                    callback(req, res);
+                    return;
+                }
+            }
+            tempPath = tempPath.slice(0, -1);
+        }
+        // match static path
+        const staticPath = this._static[path];
+        if (staticPath) {
+            console.log("static path");
+        }
+        console.log("chuj");
+        res.end("404");
+    }
+    static(path) {
+        this._static[path] = path;
     }
     parseUrl(req) {
         const url = decodeURIComponent(req.url || "");
@@ -36,6 +69,28 @@ class Router {
     getMethod(req) {
         var _a;
         return ((_a = req.method) === null || _a === void 0 ? void 0 : _a.toLowerCase()) || "get";
+    }
+    parsePath(path) {
+        const pathArr = path.split("/");
+        const parsedPathArr = pathArr.map((p) => {
+            if (p.startsWith(":")) {
+                return "***";
+            }
+            return p;
+        });
+        return parsedPathArr.join("/");
+    }
+    getPlaceholderPath(path) {
+        const placeholderPath = path
+            .split("/")
+            .slice(0, -1)
+            .join("/")
+            .concat("/***");
+        return placeholderPath;
+    }
+    getWildcardPath(path) {
+        const wildcardPath = path.split("/").slice(0, -1).join("/").concat("/*");
+        return wildcardPath;
     }
 }
 export default Router;
