@@ -1,8 +1,9 @@
 {
   "name": "slow.ts",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A small and simple alternative to express.",
   "main": "index.js",
+  "types": "index.d.ts",
   "repository": "https://github.com/dkomeza/slow",
   "author": "Dawid Komęza <dawid.komeza@gmail.com>",
   "license": "MIT",
