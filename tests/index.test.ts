@@ -4,18 +4,20 @@ const app = new slow();
 
 const router = app.router;
 
-router("get", "/", (req, res) => {
+router.static("/static");
+
+router.route("get", "/", (req, res) => {
   console.log(req.body);
   res.send("super");
 });
 
-router("post", "/*", (req, res) => {
+router.route("get", "/:id", (req, res) => {
+  console.log(req.params.id);
   console.log(req.body);
   res.send("super");
 });
 
 app.listen(5000, () => {
+  console.log(router.routes);
   console.log("Server is running");
 });
-
-fetch("/api/")
