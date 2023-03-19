@@ -9,11 +9,13 @@ router("get", "/", (req, res) => {
   res.send("super");
 });
 
-router("post", "/", (req, res) => {
+router("post", "/*", (req, res) => {
   console.log(req.body);
   res.send("super");
-})
+});
 
 app.listen(5000, () => {
   console.log("Server is running");
 });
+
+fetch("/api/")
