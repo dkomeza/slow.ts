@@ -1,5 +1,5 @@
 {
-  "name": "slow",
+  "name": "slow.ts",
   "version": "0.0.1",
   "description": "A small and simple alternative to express.",
   "main": "index.js",
