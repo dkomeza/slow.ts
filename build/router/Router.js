@@ -1,4 +1,5 @@
 import Route from "./Route.js";
+import * as fs from "fs";
 class Router {
     constructor() {
         this.routes = {};
@@ -51,11 +52,23 @@ class Router {
             tempPath = tempPath.slice(0, -1);
         }
         // match static path
-        const staticPath = this._static[path];
-        if (staticPath) {
-            console.log("static path");
+        for (const path of Object.keys(this._static)) {
+            const file = "./" + path + req.url;
+            if (fs.existsSync(file)) {
+                if (fs.statSync(file).isDirectory()) {
+                    if (fs.existsSync(file + "/index.html")) {
+                        const content = fs.readFileSync(file + "/index.html");
+                        res.write(content);
+                        res.end();
+                    }
+                }
+                else {
+                    const content = fs.readFileSync(file);
+                    res.write(content);
+                    res.end();
+                }
+            }
         }
-        console.log("chuj");
         res.end("404");
     }
     static(path) {

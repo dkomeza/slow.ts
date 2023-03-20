@@ -2,6 +2,8 @@ import Route from "./Route.js";
 import SlowResponse from "./Response.js";
 import SlowRequest from "./Request.js";
 
+import * as fs from "fs";
+
 import { methods } from "../utils/const.js";
 
 interface use {
@@ -68,11 +70,22 @@ class Router {
     }
 
     // match static path
-    const staticPath = this._static[path];
-    if (staticPath) {
-      console.log("static path");
+    for (const path of Object.keys(this._static)) {
+      const file = "./" + path + req.url;
+      if (fs.existsSync(file)) {
+        if (fs.statSync(file).isDirectory()) {
+          if (fs.existsSync(file + "/index.html")) {
+            const content = fs.readFileSync(file + "/index.html");
+            res.write(content);
+            res.end();
+          } 
+        } else {
+          const content = fs.readFileSync(file);
+          res.write(content);
+          res.end();
+        }
+      }
     }
-    console.log("chuj");
     res.end("404");
   }
 
