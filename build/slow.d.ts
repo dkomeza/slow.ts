@@ -8,6 +8,7 @@ declare class slow {
     constructor();
     private handle;
     listen(port?: number, callback?: () => void): http.Server<typeof SlowRequest, typeof SlowResponse>;
+    close(cb?: () => void): http.Server<typeof SlowRequest, typeof SlowResponse>;
 }
 export default slow;
 export declare const app: slow;

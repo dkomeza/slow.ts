@@ -27,6 +27,10 @@ class slow {
     );
     return server.listen.apply(server, [hostPort, callback]);
   }
+
+  close(cb?: () => void) {
+    return this.listen().close(cb);
+  }
 }
 
 export default slow;

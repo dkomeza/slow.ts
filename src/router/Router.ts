@@ -57,7 +57,6 @@ class Router {
     let tempPath = path.split("/");
     while (tempPath.length > 1) {
       const wildcardPath = this.getWildcardPath(tempPath.join("/"));
-      console.log(wildcardPath);
       const wildcardRoute = this.routes[wildcardPath];
       if (wildcardRoute) {
         const callback = wildcardRoute.methods[method];
@@ -78,7 +77,7 @@ class Router {
             const content = fs.readFileSync(file + "/index.html");
             res.write(content);
             res.end();
-          } 
+          }
         } else {
           const content = fs.readFileSync(file);
           res.write(content);
@@ -86,6 +85,7 @@ class Router {
         }
       }
     }
+    res.statusCode = 404;
     res.end("404");
   }
 
