@@ -1,1 +1,0 @@
-{"version":3,"file":"Response.d.ts","sourceRoot":"","sources":["../../src/router/Response.ts"],"names":[],"mappings":";AAAA,OAAO,IAAI,MAAM,MAAM,CAAC;AACxB,OAAO,WAAW,MAAM,cAAc,CAAC;AAEvC,cAAM,YAAY,CAChB,OAAO,SAAS,IAAI,CAAC,eAAe,GAAG,WAAW,CAClD,SAAQ,IAAI,CAAC,cAAc,CAAC,OAAO,CAAC;gBACxB,GAAG,EAAE,OAAO;IAGxB,IAAI,CAAC,IAAI,EAAE,GAAG,GAAG,IAAI;CAItB;AAED,eAAe,YAAY,CAAC"}
