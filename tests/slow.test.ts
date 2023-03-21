@@ -1,17 +1,49 @@
-import slow, { app } from "../index.js";
 import supertest from "supertest";
+import { expect, it, test, describe } from "vitest";
+
+import slow from "..";
+import { AddressInfo } from "net";
 
 describe("slow", () => {
-  const app = new slow();
-  it("is an object", async () => {
+  test("is an object", async () => {
     const app = new slow();
     expect(typeof app).toBe("object");
   });
-  it("should have a listen method", async () => {
+  test("should have a listen method", async () => {
     const app = new slow();
     expect(typeof app.listen).toBe("function");
   });
-  it("should send 404 on unknown route", (done) => {
-    supertest(app.server).get("/").expect(404).end(done);
+  test("should have a close method", async () => {
+    const app = new slow();
+    expect(typeof app.close).toBe("function");
   });
+});
+
+describe("server", () => {
+  test("listen should return a server", async () => {
+    const app = new slow();
+    const server = app.listen(9000);
+    expect(typeof server).toBe("object");
+    app.close();
+  });
+  test("close should close the server", async () => {
+    const app = new slow();
+    app.listen(9000);
+    app.close();
+    expect(app.server.listening).toBe(false);
+  });
+  test("listen should listen on the selected port", async () => {
+    const app = new slow();
+    const server = app.listen(9000);
+    const address = server.address() as AddressInfo;
+    expect(address.port).toBe(9000);
+    app.close();
+  });
+  test("should listen on the default port", async () => {
+    const app = new slow();
+    const server = app.listen();
+    expect(server.listening).toBe(true);
+    app.close();
+  });
+  
 });

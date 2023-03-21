@@ -11,20 +11,15 @@
   "scripts": {
     "dev": "concurrently \"npx tsc --watch\" \"nodemon build/slow.js \"",
     "build": "tsc",
-    "test": "jest  --coverage"
-  },
-  "dependencies": {
-    "@types/node": "^18.14.6"
+    "test": "vitest --coverage",
+    "coverage": "vitest run --coverage"
   },
   "devDependencies": {
-    "@babel/core": "^7.21.0",
-    "@babel/preset-env": "^7.20.2",
-    "@babel/preset-typescript": "^7.21.0",
-    "@types/jest": "^29.4.0",
     "@types/node": "^18.14.6",
     "@types/supertest": "^2.0.12",
-    "babel-jest": "^29.5.0",
-    "jest": "^29.5.0",
-    "supertest": "^6.3.3"
+    "@vitest/coverage-c8": "^0.29.7",
+    "@vitest/coverage-istanbul": "^0.29.7",
+    "supertest": "^6.3.3",
+    "vitest": "^0.29.7"
   }
 }

@@ -26,3 +26,4 @@ class slow {
 }
 export default slow;
 export const app = new slow();
+//# sourceMappingURL=slow.js.map

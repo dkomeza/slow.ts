@@ -17,3 +17,4 @@ class Route {
     }
 }
 export default Route;
+//# sourceMappingURL=Route.js.map

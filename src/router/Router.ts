@@ -6,10 +6,6 @@ import * as fs from "fs";
 
 import { methods } from "../utils/const.js";
 
-interface use {
-  (path: string, callback: (req: SlowRequest, res: SlowResponse) => void): void;
-}
-
 class Router {
   routes: { [key: string]: Route } = {};
   private _static: { [key: string]: string } = {};
@@ -34,23 +30,17 @@ class Router {
     // match exact path
     if (route) {
       const callback = route.methods[method];
-      if (callback) {
-        callback(req, res);
-        return;
-      }
+      callback(req, res);
+      return;
     }
     // match placeholder path
     const placeholderPath = this.getPlaceholderPath(path);
     const placeholderRoute = this.routes[placeholderPath];
     if (placeholderRoute) {
-      if (placeholderRoute.placeholder) {
-        req.params[placeholderRoute.placeholder] = path.split("/").pop();
-      }
+      req.params[placeholderRoute.placeholder!] = path.split("/").pop();
       const callback = placeholderRoute.methods[method];
-      if (callback) {
-        callback(req, res);
-        return;
-      }
+      callback(req, res);
+      return;
     }
 
     // match wildcard path
@@ -60,10 +50,8 @@ class Router {
       const wildcardRoute = this.routes[wildcardPath];
       if (wildcardRoute) {
         const callback = wildcardRoute.methods[method];
-        if (callback) {
-          callback(req, res);
-          return;
-        }
+        callback(req, res);
+        return;
       }
       tempPath = tempPath.slice(0, -1);
     }
@@ -71,17 +59,22 @@ class Router {
     // match static path
     for (const path of Object.keys(this._static)) {
       const file = "./" + path + req.url;
+      // res.end(fs.readFileSync(file));
       if (fs.existsSync(file)) {
         if (fs.statSync(file).isDirectory()) {
           if (fs.existsSync(file + "/index.html")) {
             const content = fs.readFileSync(file + "/index.html");
             res.write(content);
             res.end();
+            return;
+          } else {
+            break;
           }
         } else {
           const content = fs.readFileSync(file);
           res.write(content);
           res.end();
+          return;
         }
       }
     }
@@ -94,13 +87,13 @@ class Router {
   }
 
   private parseUrl(req: SlowRequest) {
-    const url = decodeURIComponent(req.url || "");
+    const url = decodeURIComponent(req.url!);
     const path = url.split("?")[0];
     return path;
   }
 
   private getMethod(req: SlowRequest): string {
-    return req.method?.toLowerCase() || "get";
+    return req.method!.toLowerCase();
   }
 
   private parsePath(path: string) {
