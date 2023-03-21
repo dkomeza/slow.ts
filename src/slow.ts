@@ -1,5 +1,4 @@
 import http from "http";
-import { methods } from "./utils/const.js";
 
 import Router from "./router/Router.js";
 import SlowResponse from "./router/Response.js";
