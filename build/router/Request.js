@@ -1,34 +1,23 @@
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 import http from "http";
 class SlowRequest extends http.IncomingMessage {
+    body = {};
+    data = "";
+    params = {};
     constructor(socket) {
         super(socket);
-        this.body = {};
-        this.data = "";
-        this.params = {};
     }
-    init() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const onData = new Promise((resolve) => {
-                this.on("data", (data) => {
-                    this.data += data.toString();
-                });
-                this.on("end", resolve);
+    async init() {
+        const onData = new Promise((resolve) => {
+            this.on("data", (data) => {
+                this.data += data.toString();
             });
-            const onClose = new Promise((resolve) => {
-                this.on("close", resolve);
-            });
-            yield Promise.all([onData, onClose]);
-            this.parseRequest();
+            this.on("end", resolve);
         });
+        const onClose = new Promise((resolve) => {
+            this.on("close", resolve);
+        });
+        await Promise.all([onData, onClose]);
+        this.parseRequest();
     }
     parseRequest() {
         switch (this.method) {
@@ -42,7 +31,7 @@ class SlowRequest extends http.IncomingMessage {
     }
     parseGetRequest() {
         const url = this.url;
-        if (url === null || url === void 0 ? void 0 : url.split("?").pop()) {
+        if (url?.split("?").pop()) {
             const params = new URLSearchParams();
             params.forEach((value, key) => {
                 this.body[key] = value;

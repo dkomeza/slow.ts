@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">59.09% </span>
+                <span class="strong">58.06% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>26/44</span>
+                <span class='fraction'>18/31</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">56% </span>
+                <span class="strong">20% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>14/25</span>
+                <span class='fraction'>2/10</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">66.66% </span>
+                <span class="strong">60% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>12/18</span>
+                <span class='fraction'>6/10</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">64.1% </span>
+                <span class="strong">58.06% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>25/39</span>
+                <span class='fraction'>18/31</span>
             </div>
         
             
@@ -120,36 +120,15 @@
 <a name='L55'></a><a href='#L55'>55</a>
 <a name='L56'></a><a href='#L56'>56</a>
 <a name='L57'></a><a href='#L57'>57</a>
-<a name='L58'></a><a href='#L58'>58</a>
-<a name='L59'></a><a href='#L59'>59</a>
-<a name='L60'></a><a href='#L60'>60</a>
-<a name='L61'></a><a href='#L61'>61</a>
-<a name='L62'></a><a href='#L62'>62</a>
-<a name='L63'></a><a href='#L63'>63</a>
-<a name='L64'></a><a href='#L64'>64</a>
-<a name='L65'></a><a href='#L65'>65</a>
-<a name='L66'></a><a href='#L66'>66</a>
-<a name='L67'></a><a href='#L67'>67</a>
-<a name='L68'></a><a href='#L68'>68</a>
-<a name='L69'></a><a href='#L69'>69</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L58'></a><a href='#L58'>58</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -161,7 +140,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -199,37 +177,26 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">var __awaiter = (this &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >this.__awaiter)</span> || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : <span class="branch-1 cbranch-no" title="branch not covered" >new P(<span class="fstat-no" title="function not covered" >fu</span>nction (resolve) { <span class="cstat-no" title="statement not covered" >resolve(value); </span>});</span> }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { <span class="cstat-no" title="statement not covered" >reject(e); </span>} }
-        function <span class="fstat-no" title="function not covered" >rejected(</span>value) { <span class="cstat-no" title="statement not covered" >try { <span class="cstat-no" title="statement not covered" >step(generator["throw"](value)); </span>} catch (e) { <span class="cstat-no" title="statement not covered" >reject(e); </span>} </span>}
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-import http from "http";
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import http from "http";
 class SlowRequest extends http.IncomingMessage {
+    body = {};
+    data = "";
+    params = {};
     constructor(socket) {
         super(socket);
-        this.body = {};
-        this.data = "";
-        this.params = {};
     }
-    init() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const onData = new Promise((resolve) =&gt; {
-                this.on("data", <span class="fstat-no" title="function not covered" >(d</span>ata) =&gt; {
-<span class="cstat-no" title="statement not covered" >                    this.data += data.toString();</span>
-                });
-                this.on("end", resolve);
+    async init() {
+        const onData = new Promise((resolve) =&gt; {
+            this.on("data", <span class="fstat-no" title="function not covered" >(d</span>ata) =&gt; {
+<span class="cstat-no" title="statement not covered" >                this.data += data.toString();</span>
             });
-            const onClose = new Promise((resolve) =&gt; {
-                this.on("close", resolve);
-            });
-            yield Promise.all([onData, onClose]);
-            this.parseRequest();
+            this.on("end", resolve);
         });
+        const onClose = new Promise((resolve) =&gt; {
+            this.on("close", resolve);
+        });
+        await Promise.all([onData, onClose]);
+        this.parseRequest();
     }
     parseRequest() {
         switch (this.method) {
@@ -243,7 +210,7 @@ class SlowRequest extends http.IncomingMessage {
     }
     parseGetRequest() {
         const url = this.url;
-        <span class="missing-if-branch" title="else path not taken" >E</span>if (url === null || url === void 0 ? <span class="branch-0 cbranch-no" title="branch not covered" >void 0 </span>: url.split("?").pop()) {
+        <span class="missing-if-branch" title="else path not taken" >E</span>if (url?.split("?").pop()) {
             const params = new URLSearchParams();
             params.forEach(<span class="fstat-no" title="function not covered" >(v</span>alue, key) =&gt; {
 <span class="cstat-no" title="statement not covered" >                this.body[key] = value;</span>
@@ -274,7 +241,7 @@ export default SlowRequest;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2023-03-20T20:17:29.263Z
+                at 2023-03-21T15:32:03.466Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

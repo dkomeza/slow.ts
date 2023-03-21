@@ -30,9 +30,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">26.66% </span>
+                <span class="strong">19.23% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>8/30</span>
+                <span class='fraction'>5/26</span>
             </div>
         
             
@@ -170,23 +170,17 @@
 <a name='L105'></a><a href='#L105'>105</a>
 <a name='L106'></a><a href='#L106'>106</a>
 <a name='L107'></a><a href='#L107'>107</a>
-<a name='L108'></a><a href='#L108'>108</a>
-<a name='L109'></a><a href='#L109'>109</a>
-<a name='L110'></a><a href='#L110'>110</a>
-<a name='L111'></a><a href='#L111'>111</a>
-<a name='L112'></a><a href='#L112'>112</a>
-<a name='L113'></a><a href='#L113'>113</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L108'></a><a href='#L108'>108</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -238,17 +232,18 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -256,12 +251,7 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -290,113 +280,108 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import Route from "./Route.js";
 import * as fs from "fs";
 class Router {
-  constructor() {
-    this.routes = {};
-    this._static = {};
-    this.route = <span class="fstat-no" title="function not covered" >(m</span>ethod, path, callback) =&gt; {
-      const parsedPath = <span class="cstat-no" title="statement not covered" >this.parsePath(path);</span>
-      const route = <span class="cstat-no" title="statement not covered" >new Route(path);</span>
-<span class="cstat-no" title="statement not covered" >      route.methods[method] = callback;</span>
-<span class="cstat-no" title="statement not covered" >      this.routes[parsedPath] = route;</span>
+    routes = {};
+    _static = {};
+    constructor() { }
+    route = <span class="fstat-no" title="function not covered" >(m</span>ethod, path, callback) =&gt; {
+        const parsedPath = <span class="cstat-no" title="statement not covered" >this.parsePath(path);</span>
+        const route = <span class="cstat-no" title="statement not covered" >new Route(path);</span>
+<span class="cstat-no" title="statement not covered" >        route.methods[method] = callback;</span>
+<span class="cstat-no" title="statement not covered" >        this.routes[parsedPath] = route;</span>
     };
-  }
-  handle(req, res) {
-    const path = this.parseUrl(req);
-    const method = this.getMethod(req);
-    const route = this.routes[path];
-    // match exact path
-    <span class="missing-if-branch" title="if path not taken" >I</span>if (route) {
-      const callback = <span class="cstat-no" title="statement not covered" >route.methods[method];</span>
-<span class="cstat-no" title="statement not covered" >      if (callback) {</span>
-<span class="cstat-no" title="statement not covered" >        callback(req, res);</span>
-<span class="cstat-no" title="statement not covered" >        return;</span>
-      }
-    }
-    // match placeholder path
-    const placeholderPath = this.getPlaceholderPath(path);
-    const placeholderRoute = this.routes[placeholderPath];
-    <span class="missing-if-branch" title="if path not taken" >I</span>if (placeholderRoute) {
-<span class="cstat-no" title="statement not covered" >      if (placeholderRoute.placeholder) {</span>
-<span class="cstat-no" title="statement not covered" >        req.params[placeholderRoute.placeholder] = path.split("/").pop();</span>
-      }
-      const callback = <span class="cstat-no" title="statement not covered" >placeholderRoute.methods[method];</span>
-<span class="cstat-no" title="statement not covered" >      if (callback) {</span>
-<span class="cstat-no" title="statement not covered" >        callback(req, res);</span>
-<span class="cstat-no" title="statement not covered" >        return;</span>
-      }
-    }
-    // match wildcard path
-    let tempPath = path.split("/");
-    while (tempPath.length &gt; 1) {
-      const wildcardPath = this.getWildcardPath(tempPath.join("/"));
-      const wildcardRoute = this.routes[wildcardPath];
-      <span class="missing-if-branch" title="if path not taken" >I</span>if (wildcardRoute) {
-        const callback = <span class="cstat-no" title="statement not covered" >wildcardRoute.methods[method];</span>
-<span class="cstat-no" title="statement not covered" >        if (callback) {</span>
-<span class="cstat-no" title="statement not covered" >          callback(req, res);</span>
-<span class="cstat-no" title="statement not covered" >          return;</span>
+    handle(req, res) {
+        const path = this.parseUrl(req);
+        const method = this.getMethod(req);
+        const route = this.routes[path];
+        // match exact path
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (route) {
+            const callback = <span class="cstat-no" title="statement not covered" >route.methods[method];</span>
+<span class="cstat-no" title="statement not covered" >            if (callback) {</span>
+<span class="cstat-no" title="statement not covered" >                callback(req, res);</span>
+<span class="cstat-no" title="statement not covered" >                return;</span>
+            }
         }
-      }
-      tempPath = tempPath.slice(0, -1);
-    }
-    // match static path
-    for (const path of Object.keys(this._static)) {
-      const file = <span class="cstat-no" title="statement not covered" >"./" + path + req.url;</span>
-<span class="cstat-no" title="statement not covered" >      if (fs.existsSync(file)) {</span>
-<span class="cstat-no" title="statement not covered" >        if (fs.statSync(file).isDirectory()) {</span>
-<span class="cstat-no" title="statement not covered" >          if (fs.existsSync(file + "/index.html")) {</span>
-            const content = <span class="cstat-no" title="statement not covered" >fs.readFileSync(file + "/index.html");</span>
-<span class="cstat-no" title="statement not covered" >            res.write(content);</span>
-<span class="cstat-no" title="statement not covered" >            res.end();</span>
-          }
-        } else {
-          const content = <span class="cstat-no" title="statement not covered" >fs.readFileSync(file);</span>
-<span class="cstat-no" title="statement not covered" >          res.write(content);</span>
-<span class="cstat-no" title="statement not covered" >          res.end();</span>
+        // match placeholder path
+        const placeholderPath = this.getPlaceholderPath(path);
+        const placeholderRoute = this.routes[placeholderPath];
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (placeholderRoute) {
+<span class="cstat-no" title="statement not covered" >            if (placeholderRoute.placeholder) {</span>
+<span class="cstat-no" title="statement not covered" >                req.params[placeholderRoute.placeholder] = path.split("/").pop();</span>
+            }
+            const callback = <span class="cstat-no" title="statement not covered" >placeholderRoute.methods[method];</span>
+<span class="cstat-no" title="statement not covered" >            if (callback) {</span>
+<span class="cstat-no" title="statement not covered" >                callback(req, res);</span>
+<span class="cstat-no" title="statement not covered" >                return;</span>
+            }
         }
-      }
+        // match wildcard path
+        let tempPath = path.split("/");
+        while (tempPath.length &gt; 1) {
+            const wildcardPath = this.getWildcardPath(tempPath.join("/"));
+            const wildcardRoute = this.routes[wildcardPath];
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (wildcardRoute) {
+                const callback = <span class="cstat-no" title="statement not covered" >wildcardRoute.methods[method];</span>
+<span class="cstat-no" title="statement not covered" >                if (callback) {</span>
+<span class="cstat-no" title="statement not covered" >                    callback(req, res);</span>
+<span class="cstat-no" title="statement not covered" >                    return;</span>
+                }
+            }
+            tempPath = tempPath.slice(0, -1);
+        }
+        // match static path
+        for (const path of Object.keys(this._static)) {
+            const file = <span class="cstat-no" title="statement not covered" >"./" + path + req.url;</span>
+<span class="cstat-no" title="statement not covered" >            if (fs.existsSync(file)) {</span>
+<span class="cstat-no" title="statement not covered" >                if (fs.statSync(file).isDirectory()) {</span>
+<span class="cstat-no" title="statement not covered" >                    if (fs.existsSync(file + "/index.html")) {</span>
+                        const content = <span class="cstat-no" title="statement not covered" >fs.readFileSync(file + "/index.html");</span>
+<span class="cstat-no" title="statement not covered" >                        res.write(content);</span>
+<span class="cstat-no" title="statement not covered" >                        res.end();</span>
+                    }
+                }
+                else {
+                    const content = <span class="cstat-no" title="statement not covered" >fs.readFileSync(file);</span>
+<span class="cstat-no" title="statement not covered" >                    res.write(content);</span>
+<span class="cstat-no" title="statement not covered" >                    res.end();</span>
+                }
+            }
+        }
+        res.statusCode = 404;
+        res.end("404");
     }
-    res.statusCode = 404;
-    res.end("404");
-  }
-<span class="fstat-no" title="function not covered" >  st</span>atic(path) {
-<span class="cstat-no" title="statement not covered" >    this._static[path] = path;</span>
-  }
-  parseUrl(req) {
-    const url = decodeURIComponent(req.url || <span class="branch-1 cbranch-no" title="branch not covered" >"")</span>;
-    const path = url.split("?")[0];
-    return path;
-  }
-  getMethod(req) {
-    var _a;
-    return (
-      ((_a = req.method) === null || _a === void 0
-        ? <span class="branch-0 cbranch-no" title="branch not covered" >void 0</span>
-        : _a.toLowerCase()) || <span class="branch-1 cbranch-no" title="branch not covered" >"get"</span>
-    );
-  }
-<span class="fstat-no" title="function not covered" >  pa</span>rsePath(path) {
-    const pathArr = <span class="cstat-no" title="statement not covered" >path.split("/");</span>
-    const parsedPathArr = <span class="cstat-no" title="statement not covered" >pathArr.map(<span class="fstat-no" title="function not covered" >(p</span>) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >      if (p.startsWith(":")) {</span>
-<span class="cstat-no" title="statement not covered" >        return "***";</span>
-      }
-<span class="cstat-no" title="statement not covered" >      return p;</span>
-    });
-<span class="cstat-no" title="statement not covered" >    return parsedPathArr.join("/");</span>
-  }
-  getPlaceholderPath(path) {
-    const placeholderPath = path
-      .split("/")
-      .slice(0, -1)
-      .join("/")
-      .concat("/***");
-    return placeholderPath;
-  }
-  getWildcardPath(path) {
-    const wildcardPath = path.split("/").slice(0, -1).join("/").concat("/*");
-    return wildcardPath;
-  }
+<span class="fstat-no" title="function not covered" >    st</span>atic(path) {
+<span class="cstat-no" title="statement not covered" >        this._static[path] = path;</span>
+    }
+    parseUrl(req) {
+        const url = decodeURIComponent(req.url || <span class="branch-1 cbranch-no" title="branch not covered" >"")</span>;
+        const path = url.split("?")[0];
+        return path;
+    }
+    getMethod(req) {
+        return req.method?.toLowerCase() || <span class="branch-1 cbranch-no" title="branch not covered" >"get";</span>
+    }
+<span class="fstat-no" title="function not covered" >    pa</span>rsePath(path) {
+        const pathArr = <span class="cstat-no" title="statement not covered" >path.split("/");</span>
+        const parsedPathArr = <span class="cstat-no" title="statement not covered" >pathArr.map(<span class="fstat-no" title="function not covered" >(p</span>) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >            if (p.startsWith(":")) {</span>
+<span class="cstat-no" title="statement not covered" >                return "***";</span>
+            }
+<span class="cstat-no" title="statement not covered" >            return p;</span>
+        });
+<span class="cstat-no" title="statement not covered" >        return parsedPathArr.join("/");</span>
+    }
+    getPlaceholderPath(path) {
+        const placeholderPath = path
+            .split("/")
+            .slice(0, -1)
+            .join("/")
+            .concat("/***");
+        return placeholderPath;
+    }
+    getWildcardPath(path) {
+        const wildcardPath = path.split("/").slice(0, -1).join("/").concat("/*");
+        return wildcardPath;
+    }
 }
 export default Router;
 &nbsp;</pre></td></tr></table></pre>
@@ -406,7 +391,7 @@ export default Router;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2023-03-20T20:17:29.263Z
+                at 2023-03-21T15:32:03.466Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

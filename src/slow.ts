@@ -6,9 +6,17 @@ import SlowResponse from "./router/Response.js";
 import SlowRequest from "./router/Request.js";
 
 class slow {
+  server: http.Server;
   router: Router;
   constructor() {
     this.router = new Router();
+    this.server = http.createServer(
+      {
+        IncomingMessage: SlowRequest,
+        ServerResponse: SlowResponse,
+      },
+      this.handle.bind(this)
+    );
   }
 
   private async handle(req: SlowRequest, res: SlowResponse) {
@@ -18,18 +26,11 @@ class slow {
 
   listen(port?: number, callback?: () => void) {
     const hostPort = port || 5000;
-    const server = http.createServer(
-      {
-        IncomingMessage: SlowRequest,
-        ServerResponse: SlowResponse,
-      },
-      this.handle.bind(this)
-    );
-    return server.listen.apply(server, [hostPort, callback]);
+    return this.server.listen.apply(this.server, [hostPort, callback]);
   }
 
   close(cb?: () => void) {
-    return this.listen().close(cb);
+    return this.server.close(cb);
   }
 }
 

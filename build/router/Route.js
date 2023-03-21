@@ -1,4 +1,7 @@
 class Route {
+    path;
+    methods;
+    placeholder;
     constructor(path) {
         this.path = path;
         this.methods = {};

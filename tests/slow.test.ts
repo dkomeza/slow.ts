@@ -1,7 +1,8 @@
-import { request } from "http";
 import slow, { app } from "../index.js";
+import supertest from "supertest";
 
 describe("slow", () => {
+  const app = new slow();
   it("is an object", async () => {
     const app = new slow();
     expect(typeof app).toBe("object");
@@ -11,11 +12,6 @@ describe("slow", () => {
     expect(typeof app.listen).toBe("function");
   });
   it("should send 404 on unknown route", (done) => {
-    app.listen(9000);
-    fetch("http://localhost:9000/unknown").then((res) => {
-      app.close();
-      expect(res.status).toBe(404);
-      done();
-    });
+    supertest(app.server).get("/").expect(404).end(done);
   });
 });
