@@ -10,18 +10,20 @@ class Route implements Route {
   methods: {
     [key: string]: callback;
   };
-  placeholder: string | undefined;
-  constructor(path: string) {
+  priority: number[]
+  placeholders: string[] = [];
+  constructor(path: string, priority: number[]) {
     this.path = path;
+    this.priority = priority
     this.methods = {};
-    this.placeholder = this.parsePlaceholderPath(path);
+    this.parsePlaceholderPath(path);
   }
 
   parsePlaceholderPath(path: string) {
     const pathArr = path.split("/");
     for (let i = 0; i < pathArr.length; i++) {
       if (pathArr[i].startsWith(":")) {
-        return pathArr[i].substring(1);
+        this.placeholders.push(pathArr[i].substring(1));
       }
     }
   }

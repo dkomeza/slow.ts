@@ -55,9 +55,7 @@ class SlowRequest extends http.IncomingMessage {
     const contentType = this.headers["content-type"]!;
     if (contentType.includes("application/json")) {
       this.body = JSON.parse(this.data);
-    } else {
-      this.body = {};
-    }
+    } 
   }
 }
 

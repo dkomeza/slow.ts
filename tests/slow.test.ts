@@ -1,4 +1,3 @@
-import supertest from "supertest";
 import { expect, it, test, describe } from "vitest";
 
 import slow from "..";
@@ -45,5 +44,4 @@ describe("server", () => {
     expect(server.listening).toBe(true);
     app.close();
   });
-  
 });
