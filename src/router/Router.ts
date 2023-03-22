@@ -25,23 +25,26 @@ class Router {
     const path = this.parseUrl(req);
     const method = this.getMethod(req);
     const keys = Object.keys(this.routes);
-    const matchedRoutes: { route: Route; regex: RegExp; key: string }[] = [];
+    const matchedRoutes: { route: Route; regex: RegExp }[] = [];
     for (const key of keys) {
       const regex = new RegExp(key) ?? false;
       if (path.match(regex)) {
         const route = this.routes[key];
-        matchedRoutes.push({ route, regex, key });
+        matchedRoutes.push({ route, regex });
       }
     }
 
     const Route = this.checkPriority(matchedRoutes, 0, method) ?? false;
     if (Route) {
-      const { route, key, regex } = Route;
+      const { route, regex } = Route;
       console.log(route.path);
       const callback = route.methods[method] ?? false;
       if (route.placeholders.length > 0) {
         route.placeholders.forEach((placeholder, index) => {
-          req.params[placeholder] = path.match(regex)![index + 1];
+          const match = path.match(regex);
+          if (match && match[index + 1]) {
+            req.params[placeholder] = match[index + 1];
+          }
         });
       }
       if (callback) {
@@ -80,10 +83,10 @@ class Router {
   }
 
   private checkPriority(
-    routes: { route: Route; regex: RegExp; key: string }[],
+    routes: { route: Route; regex: RegExp }[],
     currentSortingIndex = 0,
     method: string
-  ): { route: Route; regex: RegExp; key: string } | undefined {
+  ): { route: Route; regex: RegExp } | undefined {
     if (routes.length === 0) {
       return undefined;
     }
@@ -118,13 +121,13 @@ class Router {
   }
 
   private parseUrl(req: SlowRequest) {
-    const url = decodeURIComponent(req.url!);
+    const url = decodeURIComponent(req.url ?? "");
     const path = url.split("?")[0];
     return path;
   }
 
   private getMethod(req: SlowRequest): string {
-    return req.method!.toLowerCase();
+    return (req.method ?? "get").toLowerCase();
   }
 
   private createRegex(path: string): { regex: string; priority: number[] } {
