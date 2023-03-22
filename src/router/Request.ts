@@ -17,7 +17,7 @@ interface body {
 
 class SlowRequest extends http.IncomingMessage {
   body: body = {};
-  data: string = "";
+  data = "";
   params: { [key: string]: string | number } = {};
   constructor(socket: Socket) {
     super(socket);
@@ -65,7 +65,7 @@ class SlowRequest extends http.IncomingMessage {
   parsePostRequest() {
     this.body = {};
     const contentType = this.headers["content-type"]!;
-    if (contentType.includes("application/json")) {
+    if (contentType.includes("application/json") ?? false) {
       this.body = JSON.parse(this.data);
     }
   }
