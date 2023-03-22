@@ -63,9 +63,7 @@ class Router {
             res.write(content);
             res.end();
             return;
-          } else {
-            break;
-          }
+          } 
         } else {
           const content = fs.readFileSync(file);
           res.write(content);
