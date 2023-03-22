@@ -1,16 +1,18 @@
 import http from "http";
 import SlowRequest from "./Request.js";
 
-type data = string | number | boolean | object;
-
 class SlowResponse<
   Request extends http.IncomingMessage = SlowRequest
 > extends http.ServerResponse<Request> {
   constructor(req: Request) {
     super(req);
   }
-  send(data: data): this {
+  send(data: string | number | boolean | object | undefined | null): this {
     const type = typeof data;
+    if (data === undefined || data === null) {
+      this.end();
+      return this;
+    }
     if (type === "string") {
       this.setHeader("Content-Type", "text/plain");
       this.end(data);
