@@ -10,8 +10,6 @@ class Router {
   routes: { [key: string]: Route } = {};
   private _static: { [key: string]: string } = {};
 
-  constructor() {}
-
   route = (
     method: typeof methods[number],
     path: string,
@@ -29,19 +27,18 @@ class Router {
     const keys = Object.keys(this.routes);
     const matchedRoutes: { route: Route; regex: RegExp; key: string }[] = [];
     for (const key of keys) {
-      const regex = new RegExp(key);
+      const regex = new RegExp(key) ?? false;
       if (path.match(regex)) {
         const route = this.routes[key];
         matchedRoutes.push({ route, regex, key });
       }
     }
 
-    const Route = this.checkPriority(matchedRoutes, 0, method);
-    console.log(Route);
+    const Route = this.checkPriority(matchedRoutes, 0, method) ?? false;
     if (Route) {
       const { route, key, regex } = Route;
       console.log(route.path);
-      const callback = route.methods[method];
+      const callback = route.methods[method] ?? false;
       if (route.placeholders.length > 0) {
         route.placeholders.forEach((placeholder, index) => {
           req.params[placeholder] = path.match(regex)![index + 1];
@@ -86,7 +83,7 @@ class Router {
     routes: { route: Route; regex: RegExp; key: string }[],
     currentSortingIndex = 0,
     method: string
-  ) : { route: Route; regex: RegExp; key: string } | undefined {
+  ): { route: Route; regex: RegExp; key: string } | undefined {
     if (routes.length === 0) {
       return undefined;
     }
@@ -113,7 +110,11 @@ class Router {
         return route;
       }
     }
-    return this.checkPriority(routesWithSamePriority, currentSortingIndex + 1, method);
+    return this.checkPriority(
+      routesWithSamePriority,
+      currentSortingIndex + 1,
+      method
+    );
   }
 
   private parseUrl(req: SlowRequest) {

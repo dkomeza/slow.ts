@@ -1,12 +1,24 @@
 import http from "http";
 import { Socket } from "net";
 
+interface body {
+  [key: string]:
+    | string
+    | number
+    | boolean
+    | object
+    | undefined
+    | null
+    | string[]
+    | number[]
+    | boolean[]
+    | object[];
+}
+
 class SlowRequest extends http.IncomingMessage {
-  body: {
-    [key: string]: any;
-  } = {};
+  body: body = {};
   data: string = "";
-  params: { [key: string]: any } = {};
+  params: { [key: string]: string | number } = {};
   constructor(socket: Socket) {
     super(socket);
   }
@@ -55,7 +67,7 @@ class SlowRequest extends http.IncomingMessage {
     const contentType = this.headers["content-type"]!;
     if (contentType.includes("application/json")) {
       this.body = JSON.parse(this.data);
-    } 
+    }
   }
 }
 
