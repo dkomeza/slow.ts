@@ -10,56 +10,49 @@ class Router {
   routes: { [key: string]: Route } = {};
   private _static: { [key: string]: string } = {};
 
-  constructor() {}
-
   route = (
     method: typeof methods[number],
     path: string,
     callback: (req: SlowRequest, res: SlowResponse) => void
   ) => {
-    const parsedPath = this.parsePath(path);
-    const route = new Route(path);
+    const { regex, priority } = this.createRegex(path);
+    const route = new Route(path, priority);
     route.methods[method] = callback;
-    this.routes[parsedPath] = route;
+    this.routes[regex] = route;
   };
 
   handle(req: SlowRequest, res: SlowResponse) {
     const path = this.parseUrl(req);
     const method = this.getMethod(req);
-    const route = this.routes[path];
-    // match exact path
-    if (route) {
-      const callback = route.methods[method];
-      callback(req, res);
-      return;
-    }
-    // match placeholder path
-    const placeholderPath = this.getPlaceholderPath(path);
-    const placeholderRoute = this.routes[placeholderPath];
-    if (placeholderRoute) {
-      req.params[placeholderRoute.placeholder!] = path.split("/").pop();
-      const callback = placeholderRoute.methods[method];
-      callback(req, res);
-      return;
+    const keys = Object.keys(this.routes);
+    const matchedRoutes: { route: Route; regex: RegExp; key: string }[] = [];
+    for (const key of keys) {
+      const regex = new RegExp(key) ?? false;
+      if (path.match(regex)) {
+        const route = this.routes[key];
+        matchedRoutes.push({ route, regex, key });
+      }
     }
 
-    // match wildcard path
-    let tempPath = path.split("/");
-    while (tempPath.length > 1) {
-      const wildcardPath = this.getWildcardPath(tempPath.join("/"));
-      const wildcardRoute = this.routes[wildcardPath];
-      if (wildcardRoute) {
-        const callback = wildcardRoute.methods[method];
+    const Route = this.checkPriority(matchedRoutes, 0, method) ?? false;
+    if (Route) {
+      const { route, key, regex } = Route;
+      console.log(route.path);
+      const callback = route.methods[method] ?? false;
+      if (route.placeholders.length > 0) {
+        route.placeholders.forEach((placeholder, index) => {
+          req.params[placeholder] = path.match(regex)![index + 1];
+        });
+      }
+      if (callback) {
         callback(req, res);
         return;
       }
-      tempPath = tempPath.slice(0, -1);
     }
 
     // match static path
     for (const path of Object.keys(this._static)) {
       const file = "./" + path + req.url;
-      // res.end(fs.readFileSync(file));
       if (fs.existsSync(file)) {
         if (fs.statSync(file).isDirectory()) {
           if (fs.existsSync(file + "/index.html")) {
@@ -86,6 +79,44 @@ class Router {
     this._static[path] = path;
   }
 
+  private checkPriority(
+    routes: { route: Route; regex: RegExp; key: string }[],
+    currentSortingIndex = 0,
+    method: string
+  ): { route: Route; regex: RegExp; key: string } | undefined {
+    if (routes.length === 0) {
+      return undefined;
+    }
+    if (routes.length === 1) {
+      return routes[0];
+    }
+    const sortedRoutes = routes.sort((a, b) => {
+      return (
+        a.route.priority[currentSortingIndex] -
+        b.route.priority[currentSortingIndex]
+      );
+    });
+
+    const currentLowestPriority =
+      sortedRoutes[0].route.priority[currentSortingIndex];
+    const routesWithSamePriority = sortedRoutes.filter(
+      (route) =>
+        route.route.priority[currentSortingIndex] === currentLowestPriority
+    );
+    if (routesWithSamePriority.length === 1) {
+      const route = routesWithSamePriority[0];
+      if (route.route.methods[method]) {
+        console.log(route);
+        return route;
+      }
+    }
+    return this.checkPriority(
+      routesWithSamePriority,
+      currentSortingIndex + 1,
+      method
+    );
+  }
+
   private parseUrl(req: SlowRequest) {
     const url = decodeURIComponent(req.url!);
     const path = url.split("?")[0];
@@ -96,29 +127,26 @@ class Router {
     return req.method!.toLowerCase();
   }
 
-  private parsePath(path: string) {
-    const pathArr = path.split("/");
-    const parsedPathArr = pathArr.map((p) => {
+  private createRegex(path: string): { regex: string; priority: number[] } {
+    const pathArr = path.split("/").filter((p) => p);
+    const priority: number[] = [];
+    let regex = "^";
+    pathArr.forEach((p, index) => {
       if (p.startsWith(":")) {
-        return "***";
+        regex += "\\/((?:[^/])+)";
+        priority[index] = 1;
+      } else if (p === "*") {
+        regex += "\\/(\\S+)";
+        priority[index] = 2;
+      } else {
+        regex += `\\/${p}`;
+        priority[index] = 0;
       }
-      return p;
     });
-    return parsedPathArr.join("/");
-  }
-
-  private getPlaceholderPath(path: string) {
-    const placeholderPath = path
-      .split("/")
-      .slice(0, -1)
-      .join("/")
-      .concat("/***");
-    return placeholderPath;
-  }
-
-  private getWildcardPath(path: string) {
-    const wildcardPath = path.split("/").slice(0, -1).join("/").concat("/*");
-    return wildcardPath;
+    if (!path.endsWith("*")) {
+      regex += "$";
+    }
+    return { regex, priority };
   }
 }
 
