@@ -4,17 +4,13 @@ import Router from "./router/Router.js";
 import SlowResponse from "./router/Response.js";
 import SlowRequest from "./router/Request.js";
 
-import Socket from "./socket/Socket.js";
-
 interface SlowOptions {
   router?: boolean;
-  socket?: boolean;
 }
 
 class slow {
   server: http.Server;
   router: Router | undefined;
-  socket: Socket | undefined;
   constructor(opts?: SlowOptions) {
     this.server = http.createServer(
       {
@@ -26,10 +22,6 @@ class slow {
     // create router by default
     if (opts?.router !== false) {
       this.router = new Router();
-    }
-    // create socket if specified
-    if (opts?.socket === true) {
-      this.socket = new Socket(this.server);
     }
   }
 
