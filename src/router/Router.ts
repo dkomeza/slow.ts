@@ -4,7 +4,7 @@ import SlowRequest from "./Request.js";
 
 import * as fs from "fs";
 
-import { methods } from "../utils/const.js";
+import { methods, fileMimeTypes } from "../utils/const.js";
 
 class Router {
   routes: { [key: string]: Route } = {};
@@ -37,7 +37,6 @@ class Router {
     const Route = this.checkPriority(matchedRoutes, 0, method) ?? false;
     if (Route) {
       const { route, regex } = Route;
-      console.log(route.path);
       const callback = route.methods[method] ?? false;
       if (route.placeholders.length > 0) {
         route.placeholders.forEach((placeholder, index) => {
@@ -54,23 +53,14 @@ class Router {
     }
 
     // match static path
-    for (const path of Object.keys(this._static)) {
-      const file = "./" + path + req.url;
-      if (fs.existsSync(file)) {
-        if (fs.statSync(file).isDirectory()) {
-          if (fs.existsSync(file + "/index.html")) {
-            const content = fs.readFileSync(file + "/index.html");
-            res.write(content);
-            res.end();
-            return;
-          } 
-        } else {
-          const content = fs.readFileSync(file);
-          res.write(content);
-          res.end();
-          return;
-        }
-      }
+    const staticPath = this.getStaticFile(path) ?? false;
+    if (staticPath) {
+      const { path, mime } = staticPath;
+      const content = fs.readFileSync(path);
+      res.writeHead(200, { "content-type": mime });
+      res.write(content);
+      res.end();
+      return;
     }
     res.statusCode = 404;
     res.end("404");
@@ -107,7 +97,6 @@ class Router {
     if (routesWithSamePriority.length === 1) {
       const route = routesWithSamePriority[0];
       if (route.route.methods[method]) {
-        console.log(route);
         return route;
       }
     }
@@ -130,6 +119,9 @@ class Router {
 
   private createRegex(path: string): { regex: string; priority: number[] } {
     const pathArr = path.split("/").filter((p) => p);
+    if (pathArr.length === 0) {
+      return { regex: "^/$", priority: [0] };
+    }
     const priority: number[] = [];
     let regex = "^";
     pathArr.forEach((p, index) => {
@@ -148,6 +140,30 @@ class Router {
       regex += "$";
     }
     return { regex, priority };
+  }
+
+  private getStaticFile(
+    path: string
+  ): { path: string; mime: string } | undefined {
+    for (const staticPath of Object.keys(this._static)) {
+      const file = "./" + staticPath + path;
+      if (fs.existsSync(file)) {
+        if (fs.statSync(file).isDirectory()) {
+          if (fs.existsSync(file + "/index.html")) {
+            const ext = ".html";
+            const mime = fileMimeTypes[ext] ?? "text/plain";
+            return { path: file + "/index.html", mime };
+          }
+        } else {
+          const ext = ".".concat(
+            file.split(".").pop() ?? ""
+          ) as keyof typeof fileMimeTypes;
+          const mime = fileMimeTypes[ext] ?? "text/plain";
+          return { path: file, mime };
+        }
+      }
+    }
+    return;
   }
 }
 

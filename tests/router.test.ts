@@ -20,8 +20,7 @@ describe("router", () => {
   });
   test("should be able to add a route", async () => {
     router.route("get", "/test", (req, res) => {
-      // res.send("test");
-      res.send(["test"]);
+      res.send("test");
     });
     const res = await supertest(app.server).get("/test");
     expect(res.text).toBe("test");

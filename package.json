@@ -20,6 +20,7 @@
     "@vitest/coverage-c8": "^0.29.7",
     "@vitest/coverage-istanbul": "^0.29.7",
     "supertest": "^6.3.3",
+    "superwstest": "^2.0.3",
     "vitest": "^0.29.7"
   }
 }
