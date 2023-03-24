@@ -24,6 +24,16 @@ class Router {
   handle(req: SlowRequest, res: SlowResponse) {
     const path = this.parseUrl(req);
     const method = this.getMethod(req);
+    
+
+    const regex = new RegExp("(\\.){2,}", "g");
+    const match = path.match(regex);
+    if (match) {
+      res.statusCode = 403;
+      res.end("403");
+      return;
+    }
+
     const keys = Object.keys(this.routes);
     const matchedRoutes: { route: Route; regex: RegExp }[] = [];
     for (const key of keys) {

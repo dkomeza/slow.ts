@@ -1,6 +1,8 @@
 import supertest from "supertest";
 import { expect, it, test, describe } from "vitest";
 
+import blns from "blns";
+
 import slow from "..";
 
 describe("router", () => {
@@ -195,6 +197,13 @@ describe("static routes", () => {
   test("should return correct mime type on js files", async () => {
     const res = await supertest(app.server).get("/index.js");
     expect(res.headers["content-type"]).toBe("application/javascript");
+  });
+
+  test("should reject routes with .. ", async () => {
+    const res = await supertest(app.server).get(
+      "/new_folder/../../../keys.html"
+    );
+    expect(res.text).toBe("403");
   });
 });
 
