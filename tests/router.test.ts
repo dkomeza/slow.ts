@@ -1,11 +1,13 @@
 import supertest from "supertest";
 import { expect, it, test, describe } from "vitest";
 
+import blns from "blns";
+
 import slow from "..";
 
 describe("router", () => {
   const app = new slow();
-  const router = app.router;
+  const router = app.router!;
   test("should have a router", async () => {
     expect(typeof router).toBe("object");
   });
@@ -32,11 +34,23 @@ describe("router", () => {
   test("should be able to add a static route", async () => {
     router.static("static");
   });
+  test("should be able to handle no route", async () => {
+    const res = await supertest(app.server).get("");
+    expect(res.text).toBe("404");
+  });
 });
 
 describe("strict routes", () => {
   const app = new slow();
-  const router = app.router;
+  const router = app.router!;
+
+  test("should be able to handle / routes", async () => {
+    router.route("get", "/", (req, res) => {
+      res.send("/");
+    });
+    const res = await supertest(app.server).get("/");
+    expect(res.text).toBe("/");
+  });
 
   test("should prioritise strict routes", async () => {
     router.route("get", "/test_priority/*", (req, res) => {
@@ -75,11 +89,6 @@ describe("strict routes", () => {
     expect(res.text).toBe('{"test":"test"}');
   });
 
-  test("should be able to handle no route", async () => {
-    const res = await supertest(app.server).get("");
-    expect(res.text).toBe("404");
-  });
-
   test("should be able to hande route with different method", async () => {
     router.route("post", "/test_no_method", (req, res) => {
       res.send(req.body.test);
@@ -91,7 +100,7 @@ describe("strict routes", () => {
 
 describe("placeholder routes", () => {
   const app = new slow();
-  const router = app.router;
+  const router = app.router!;
 
   test("should be able to handle a placeholder route", async () => {
     router.route("get", "/test_placeholder/:id", (req, res) => {
@@ -142,7 +151,7 @@ describe("placeholder routes", () => {
 
 describe("wildcard routes", () => {
   const app = new slow();
-  const router = app.router;
+  const router = app.router!;
 
   test("should be able to handle a wildcard route", async () => {
     router.route("get", "/test/*", (req, res) => {
@@ -155,7 +164,7 @@ describe("wildcard routes", () => {
 
 describe("static routes", () => {
   const app = new slow();
-  const router = app.router;
+  const router = app.router!;
 
   test("should be able to handle a static route", async () => {
     router.static("tests/static");
@@ -173,6 +182,28 @@ describe("static routes", () => {
     router.static("tests/static");
     const res = await supertest(app.server).get("/test_empty_directory");
     expect(res.text).toBe("404");
+  });
+
+  test("should return correct mime type on html files", async () => {
+    const res = await supertest(app.server).get("/index.html");
+    expect(res.headers["content-type"]).toBe("text/html");
+  });
+
+  test("should return correct mime type on txt files", async () => {
+    const res = await supertest(app.server).get("/index.txt");
+    expect(res.headers["content-type"]).toBe("text/plain");
+  });
+
+  test("should return correct mime type on js files", async () => {
+    const res = await supertest(app.server).get("/index.js");
+    expect(res.headers["content-type"]).toBe("application/javascript");
+  });
+
+  test("should reject routes with .. ", async () => {
+    const res = await supertest(app.server).get(
+      "/new_folder/../../../keys.html"
+    );
+    expect(res.text).toBe("403");
   });
 });
 

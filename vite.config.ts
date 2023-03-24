@@ -7,5 +7,6 @@ export default defineConfig({
     coverage: {
       provider: "istanbul", // or 'c8',
     },
+    testTimeout: 1000,
   },
 });
