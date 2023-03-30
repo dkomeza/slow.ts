@@ -207,4 +207,25 @@ describe("static routes", () => {
   });
 });
 
+describe("test", () => {
+  const app = new slow();
+  const router = app.router!;
+  router.route("get", "/tasks", (req, res) => {
+    res.send("get");
+  });
+  router.route("post", "/tasks", (req, res) => {
+    res.send("post");
+  });
+  test("post and get on single route (get)", async () => {
+    const res = await supertest(app.server).get("/tasks");
+    // expect(router.routes["/tasks"])
+    expect(res.text).toBe("get");
+  });
+  test("post and get on single route (post)", async () => {
+    const res = await supertest(app.server).post("/tasks");
+    // expect(router.routes["/tasks"])
+    expect(res.text).toBe("post");
+  });
+});
+
 // Path: tests/slow.test.ts

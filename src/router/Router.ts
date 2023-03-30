@@ -16,6 +16,10 @@ class Router {
     callback: (req: SlowRequest, res: SlowResponse) => void
   ) => {
     const { regex, priority } = this.createRegex(path);
+    if (this.routes[regex]) {
+      this.routes[regex].methods[method] = callback;
+      return;
+    }
     const route = new Route(path, priority);
     route.methods[method] = callback;
     this.routes[regex] = route;
@@ -24,7 +28,6 @@ class Router {
   handle(req: SlowRequest, res: SlowResponse) {
     const path = this.parseUrl(req);
     const method = this.getMethod(req);
-    
 
     const regex = new RegExp("(\\.){2,}", "g");
     const match = path.match(regex);
