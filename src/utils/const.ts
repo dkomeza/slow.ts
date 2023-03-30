@@ -1,4 +1,4 @@
-export const methods = ["get", "post"] as const;
+export const methods = ["get", "post", "put", "delete"] as const;
 
 export const fileMimeTypes = {
   ".123": "application/vnd.lotus-1-2-3",
