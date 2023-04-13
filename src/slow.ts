@@ -37,8 +37,8 @@ class slow {
     return this.server.listen.apply(this.server, [hostPort, callback]);
   }
 
-  close(cb?: () => void) {
-    return this.server.close(cb);
+  async close() {
+    return new Promise((resolve) => this.server.close(resolve));
   }
 }
 
