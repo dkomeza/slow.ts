@@ -96,6 +96,17 @@ describe("strict routes", () => {
     const res = await supertest(app.server).get("/test_no_method");
     expect(res.text).toBe("404");
   });
+
+  test("should be able to handle post body", async () => {
+    router.route("post", "/post_params", (req, res) => {
+      res.send(req.body);
+    });
+
+    const res = await supertest(app.server)
+      .post("/post_params")
+      .send({ test: "test" });
+    expect(res.text).toBe('{"test":"test"}');
+  });
 });
 
 describe("placeholder routes", () => {
