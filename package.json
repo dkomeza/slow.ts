@@ -1,6 +1,6 @@
 {
   "name": "slow.ts",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "description": "A small and simple alternative to express.",
   "main": "./index.js",
   "types": "./index.d.ts",
