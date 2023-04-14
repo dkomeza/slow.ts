@@ -107,6 +107,20 @@ describe("strict routes", () => {
       .send({ test: "test" });
     expect(res.text).toBe('{"test":"test"}');
   });
+
+  test("should be able to handle different enctype", async () => {
+    router.route("post", "/post_form_data", (req, res) => {
+      res.send("ok");
+    });
+    const formData = new FormData();
+    formData.append("image", new Blob([""], { type: "image/png" }));
+    formData.append("name", "test");
+    const res = await supertest(app.server)
+      .post("/post_form_data")
+      .field("name", "test")
+      .set("Content-Yype", "multipart/form-data");
+    expect(res.text).toEqual("ok");
+  });
 });
 
 describe("placeholder routes", () => {

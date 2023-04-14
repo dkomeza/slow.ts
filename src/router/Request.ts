@@ -41,9 +41,11 @@ class SlowRequest extends http.IncomingMessage {
   parseRequest() {
     switch (this.method) {
       case "GET":
+      case "HEAD":
         this.parseGetRequest();
         break;
       case "POST":
+      case "PUT":
         this.parsePostRequest();
         break;
     }
@@ -64,7 +66,9 @@ class SlowRequest extends http.IncomingMessage {
 
   parsePostRequest() {
     this.body = {};
-    if (this.data) {
+    const contentType = this.headers["content-type"] || "";
+
+    if (contentType.includes("application/json")) {
       this.body = JSON.parse(this.data);
     }
   }
