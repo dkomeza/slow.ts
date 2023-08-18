@@ -32,7 +32,7 @@ describe("router", () => {
     app.close();
   });
   test("should be able to add a static route", async () => {
-    router.static("static");
+    router.static("/", "static");
   });
   test("should be able to handle no route", async () => {
     const res = await supertest(app.server).get("");
@@ -192,19 +192,19 @@ describe("static routes", () => {
   const router = app.router!;
 
   test("should be able to handle a static route", async () => {
-    router.static("tests/static");
+    router.static("/", "tests/static");
     const res = await supertest(app.server).get("/index.html");
     expect(res.text).toBe("test");
   });
 
   test("should be able to handle an index route", async () => {
-    router.static("tests/static");
+    router.static("/", "tests/static");
     const res = await supertest(app.server).get("/");
     expect(res.text).toBe("test");
   });
 
   test("should be able to handle no static file", async () => {
-    router.static("tests/static");
+    router.static("/", "tests/static");
     const res = await supertest(app.server).get("/test_empty_directory");
     expect(res.text).toBe("404");
   });

@@ -6,12 +6,26 @@ import * as fs from "fs";
 
 import { methods, fileMimeTypes } from "../utils/const.js";
 
+interface Middleware {
+  callback: (req: SlowRequest, res: SlowResponse, next: () => void) => void;
+  priority: number[];
+}
 class Router {
   routes: { [key: string]: Route } = {};
-  private _static: { [key: string]: string } = {};
+  middleware: { [key: string]: Middleware } = {};
+  private _static: {
+    [key: string]: {
+      path: string;
+      middleware?: (
+        req: SlowRequest,
+        res: SlowResponse,
+        next: () => void
+      ) => void;
+    };
+  } = {};
 
   route = (
-    method: typeof methods[number],
+    method: (typeof methods)[number],
     path: string,
     callback: (req: SlowRequest, res: SlowResponse) => void
   ) => {
@@ -48,6 +62,10 @@ class Router {
     }
 
     const Route = this.checkPriority(matchedRoutes, 0, method) ?? false;
+    const Middleware = this.checkMiddlewarePriority(
+      this.matchMiddleware(path) ?? [],
+      0
+    );
     if (Route) {
       const { route, regex } = Route;
       const callback = route.methods[method] ?? false;
@@ -59,7 +77,15 @@ class Router {
           }
         });
       }
-      if (callback) {
+
+      if (Middleware?.callback) {
+        Middleware.callback(req, res, () => {
+          if (callback) {
+            callback(req, res);
+          }
+        });
+        return;
+      } else if (callback) {
         callback(req, res);
         return;
       }
@@ -68,19 +94,69 @@ class Router {
     // match static path
     const staticPath = this.getStaticFile(path) ?? false;
     if (staticPath) {
-      const { path, mime } = staticPath;
-      const content = fs.readFileSync(path);
-      res.writeHead(200, { "content-type": mime });
-      res.write(content);
-      res.end();
-      return;
+      const { path, mime, middleware } = staticPath;
+      if (middleware) {
+        middleware(req, res, () => {
+          const content = fs.readFileSync(path);
+          res.writeHead(200, { "content-type": mime });
+          res.write(content);
+          res.end();
+        });
+        return;
+      } else {
+        const content = fs.readFileSync(path);
+        res.writeHead(200, { "content-type": mime });
+        res.write(content);
+        res.end();
+        return;
+      }
     }
     res.statusCode = 404;
     res.end("404");
   }
 
-  static(path: string) {
-    this._static[path] = path;
+  static(
+    reqPath: string,
+    path: string,
+    middleware?: (req: SlowRequest, res: SlowResponse, next: () => void) => void
+  ) {
+    if (reqPath[reqPath.length - 1] === "/") {
+      reqPath = reqPath.slice(0, reqPath.length - 1);
+    }
+
+    if (path[path.length - 1] === "/") {
+      path = path.slice(0, path.length - 1);
+    }
+
+    this._static[reqPath] = {
+      path,
+      middleware,
+    };
+  }
+
+  registerMiddleware(
+    path: string,
+    callback: (req: SlowRequest, res: SlowResponse, next: () => void) => void
+  ) {
+    const { regex, priority } = this.createRegex(path);
+    this.middleware[regex] = {
+      callback,
+      priority,
+    };
+  }
+
+  private matchMiddleware(path: string): Middleware[] | undefined {
+    const matchedMiddleware = Object.keys(this.middleware).filter((key) => {
+      const regex = new RegExp(key);
+      return path.match(regex);
+    });
+    if (matchedMiddleware.length === 0) {
+      return undefined;
+    }
+    const middleware = matchedMiddleware.map((key) => {
+      return this.middleware[key];
+    });
+    return middleware;
   }
 
   private checkPriority(
@@ -120,6 +196,35 @@ class Router {
     );
   }
 
+  private checkMiddlewarePriority(
+    middleware: Middleware[],
+    currentSortingIndex = 0
+  ): Middleware | undefined {
+    if (middleware.length === 0) {
+      return undefined;
+    }
+    if (middleware.length === 1) {
+      return middleware[0];
+    }
+    const sortedRoutes = middleware.sort((a, b) => {
+      return a.priority[currentSortingIndex] - b.priority[currentSortingIndex];
+    });
+
+    const currentLowestPriority = sortedRoutes[0].priority[currentSortingIndex];
+    const routesWithSamePriority = sortedRoutes.filter(
+      (middleware) =>
+        middleware.priority[currentSortingIndex] === currentLowestPriority
+    );
+    if (routesWithSamePriority.length === 1) {
+      const middleware = routesWithSamePriority[0];
+      return middleware;
+    }
+    return this.checkMiddlewarePriority(
+      routesWithSamePriority,
+      currentSortingIndex + 1
+    );
+  }
+
   private parseUrl(req: SlowRequest) {
     const url = decodeURIComponent(req.url ?? "");
     const path = url.split("?")[0];
@@ -155,24 +260,38 @@ class Router {
     return { regex, priority };
   }
 
-  private getStaticFile(
-    path: string
-  ): { path: string; mime: string } | undefined {
-    for (const staticPath of Object.keys(this._static)) {
-      const file = "./" + staticPath + path;
+  private getStaticFile(_path: string):
+    | {
+        path: string;
+        mime: string;
+        middleware?: (
+          req: SlowRequest,
+          res: SlowResponse,
+          next: () => void
+        ) => void;
+      }
+    | undefined {
+    for (const _static of Object.keys(this._static)) {
+      const { path, middleware } = this._static[_static];
+
+      const regex = new RegExp(`^${_static}`);
+      if (!_path.match(regex)) {
+        continue;
+      }
+      const file = _path.replace(regex, path);
       if (fs.existsSync(file)) {
         if (fs.statSync(file).isDirectory()) {
-          if (fs.existsSync(file + "/index.html")) {
+          if (fs.existsSync(file + "index.html")) {
             const ext = ".html";
             const mime = fileMimeTypes[ext] ?? "text/plain";
-            return { path: file + "/index.html", mime };
+            return { path: file + "/index.html", mime, middleware };
           }
         } else {
           const ext = ".".concat(
             file.split(".").pop() ?? ""
           ) as keyof typeof fileMimeTypes;
           const mime = fileMimeTypes[ext] ?? "text/plain";
-          return { path: file, mime };
+          return { path: file, mime, middleware };
         }
       }
     }

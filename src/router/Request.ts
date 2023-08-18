@@ -24,18 +24,25 @@ class SlowRequest extends http.IncomingMessage {
   }
 
   async init() {
-    const onData = new Promise((resolve) => {
-      this.on("data", (data: Buffer) => {
-        this.data += data.toString();
-      });
-      this.on("end", resolve);
-    });
-    const onClose = new Promise((resolve) => {
-      this.on("close", resolve);
-    });
-
-    await Promise.all([onData, onClose]);
+    await this.handleContentType();
     this.parseRequest();
+  }
+
+  async handleContentType() {
+    const contentType = this.headers["content-type"] || "";
+    if (contentType?.includes("application/json")) {
+      const onData = new Promise((resolve) => {
+        this.on("data", (data: Buffer) => {
+          this.data += data.toString();
+        });
+        this.on("end", resolve);
+      });
+      const onClose = new Promise((resolve) => {
+        this.on("close", resolve);
+      });
+
+      await Promise.all([onData, onClose]);
+    }
   }
 
   parseRequest() {

@@ -32,13 +32,22 @@ class slow {
     }
   }
 
+  registerMiddleware(
+    path: string,
+    middleware: (req: SlowRequest, res: SlowResponse, next: () => void) => void
+  ) {
+    if (this.router) {
+      this.router.registerMiddleware(path, middleware);
+    }
+  }
+
   listen(port?: number, callback?: () => void) {
     const hostPort = port || 5000;
     return this.server.listen.apply(this.server, [hostPort, callback]);
   }
 
   async close() {
-    return new Promise((resolve) => this.server.close(resolve));
+    return await new Promise((resolve) => this.server.close(resolve));
   }
 }
 
