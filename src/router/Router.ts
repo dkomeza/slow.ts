@@ -281,7 +281,7 @@ class Router {
       const file = _path.replace(regex, path);
       if (fs.existsSync(file)) {
         if (fs.statSync(file).isDirectory()) {
-          if (fs.existsSync(_path + "/index.html")) {
+          if (fs.existsSync(file + "index.html")) {
             const ext = ".html";
             const mime = fileMimeTypes[ext] ?? "text/plain";
             return { path: file + "/index.html", mime, middleware };
